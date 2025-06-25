@@ -20,7 +20,7 @@ Features
   - Tracks all actions  
   - View in GUI or ask: “Show activity log”
 
-## 📁 Project Structure
+Project Structure
 
 - `Helpers/` – Art, chatbot logic  
 - `Models/` – Task, log, quiz models  
@@ -30,13 +30,13 @@ Features
 - `App.xaml(.cs)` – App config  
 - `README.md` – Project info
 
-## 🧪 Quick Examples
+Quick Examples
 - **Task (GUI)**: Fill Title, Desc, Date → Add → Task + log  
 - **Task (Chat)**: “Add task update antivirus” → “Yes, in 2 days”  
 - **Quiz**: “Start quiz” → Answer Qs → “Correct!” / “Wrong.” → Final score  
 - **Log**: Check Log tab or ask “What have you done for me?”
 
 
-## 🎥 Demo
+Demo
 
 📺 [Watch Video](#) *(replace with your YouTube link)*
