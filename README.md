@@ -20,8 +20,8 @@ CyberSecurityChatBotGUI
 └─ README.md
 
 
-🚀 Getting Started
-🔍 Features & Quick Tests
+Getting Started
+Features & Quick Tests
 Task Assistant
 
 GUI: Fill Title/Description/Date → Add → appears in list + log.
