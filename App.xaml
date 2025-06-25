@@ -1,0 +1,57 @@
+﻿<Application x:Class="CyberSecurityChatBotGUI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- EXISTING GLOBAL STYLES -->
+            <Style x:Key="PageTitle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Margin" Value="0,0,0,10"/>
+            </Style>
+            <Style x:Key="SectionBox" TargetType="GroupBox">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Margin" Value="0,10,0,0"/>
+                <Setter Property="Padding" Value="8"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="6,3"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <!-- NEW TAB BACKGROUNDS -->
+            <Color x:Key="ChatBgColor">#FFEEF7FF</Color>
+            <Color x:Key="TasksBgColor">#FFF2FFF0</Color>
+            <Color x:Key="QuizBgColor">#FFFFF9EA</Color>
+            <Color x:Key="LogBgColor">#FFF9F0FF</Color>
+
+            <SolidColorBrush x:Key="ChatBackground" Color="{StaticResource ChatBgColor}"/>
+            <SolidColorBrush x:Key="TasksBackground" Color="{StaticResource TasksBgColor}"/>
+            <SolidColorBrush x:Key="QuizBackground" Color="{StaticResource QuizBgColor}"/>
+            <SolidColorBrush x:Key="LogBackground"  Color="{StaticResource LogBgColor}"/>
+
+            <!-- NEW TEXT STYLES -->
+            <Style x:Key="ErrorText" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            <Style x:Key="SuccessText" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Green"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+
+            <!-- ValidationText alias so your controls finding ValidationText get the same red style -->
+            <Style x:Key="ValidationText" TargetType="TextBlock" BasedOn="{StaticResource ErrorText}" />
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

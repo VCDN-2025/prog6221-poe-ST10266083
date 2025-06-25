@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\greeting.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\greeting.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Figgle" Version="0.6.2" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.10" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Helpers\Art.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+</Project>

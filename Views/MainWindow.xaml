@@ -1,0 +1,54 @@
+﻿<Window x:Class="CyberSecurityChatBotGUI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:CyberSecurityChatBotGUI.Views.Controls"
+        Title="CyberSecurity ChatBot" Height="620" Width="900">
+    <Grid>
+        <!-- ===== Splash / Home Screen ===== -->
+        <Grid x:Name="HomeGrid">
+            <StackPanel VerticalAlignment="Center"
+                  HorizontalAlignment="Center"
+                  Width="300">
+                <TextBlock Text="Welcome to CyberSecurity Suite"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   TextAlignment="Center"
+                   Margin="0,0,0,20"/>
+                <Button Content="Chatbot System"
+                Height="40"
+                Margin="0,0,0,10"
+                Click="OnHome_Chatbot"/>
+                <Button Content="View Tasks"
+                Height="40"
+                Margin="0,0,0,10"
+                Click="OnHome_Tasks"/>
+                <Button Content="Quiz Game"
+                Height="40"
+                Margin="0,0,0,10"
+                Click="OnHome_Quiz"/>
+                <Button Content="Activity Log"
+                Height="40"
+                Margin="0,0,0,10"
+                Click="OnHome_Log"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ===== Your actual Tabbed UI (hidden at first) ===== -->
+        <Grid x:Name="MainGrid" Visibility="Collapsed">
+            <TabControl x:Name="MainTab">
+                <TabItem Header="Chatbot">
+                    <ctrl:NlpControl x:Name="NlpCtrl"/>
+                </TabItem>
+                <TabItem Header="Tasks">
+                    <ctrl:TaskControl x:Name="TaskCtrl"/>
+                </TabItem>
+                <TabItem Header="Quiz">
+                    <ctrl:QuizControl x:Name="QuizCtrl"/>
+                </TabItem>
+                <TabItem Header="Activity Log">
+                    <ctrl:LogControl x:Name="LogCtrl"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</Window>

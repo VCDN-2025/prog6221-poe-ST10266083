@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="CyberSecurityChatBotGUI.Views.Controls.NlpControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="550" d:DesignWidth="650"
+             Background="{StaticResource ChatBackground}">
+    <StackPanel Margin="10">
+        <TextBlock Text="Chatbot" Style="{StaticResource PageTitle}"/>
+
+        <GroupBox Header="Welcome" Style="{StaticResource SectionBox}">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                <TextBlock x:Name="AsciiBlock"
+                   FontFamily="Consolas"
+                   TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </GroupBox>
+
+        <GroupBox Header="Conversation" Style="{StaticResource SectionBox}">
+            <ScrollViewer x:Name="ChatScroll"
+                    Height="300"
+                    VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="ChatOutput"/>
+            </ScrollViewer>
+        </GroupBox>
+
+        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <TextBox x:Name="ChatInput" Width="600" Height="30"/>
+            <Button Content="Send" Click="Send_Click" Margin="5,0,0,0"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
