@@ -1,53 +1,48 @@
-ST10266083 Cybersecurity Awareness Chatbot (WPF)
+Cybersecurity Awareness Chatbot ST10266083
 
-Built with WPF/XAML, it features:
+A WPF desktop chatbot that raises cybersecurity awareness through smart chat, task reminders, and a quick quiz — all tracked in an activity log.
 
-- NLP Simulation - (keyword & regex handling)  
-- Task Assistant (add/delete/complete tasks + reminders)  
-- Cybersecurity Quiz (10 mixed T/F & MCQs, instant feedback, score)  
-- Activity Log (tracks tasks, reminders, quiz, NLP actions)
+Features
 
-Structure
+- **NLP Simulation**  
+  - Keyword + regex-based recognition  
+  - Supports follow-ups, preferences, and tips
 
-CyberSecurityChatBotGUI
-├─ /Helpers (Art.cs, ChatBotProcessor.cs)
-├─ /Models (LogEntry.cs, QuizQuestion.cs, TaskItem.cs)
-├─ /Services (LogService.cs, NlpService.cs, QuizService.cs, ReminderService.cs)
-├─ /Views
-│ ├─ MainWindow.xaml(.cs)
-│ └─ /Controls (NlpControl, TaskControl, QuizControl, LogControl)
-├─ App.xaml(.cs)
-└─ README.md
+- **Task Assistant**  
+  - Add/delete/complete tasks (GUI + chat)  
+  - Date reminders with input validation
+
+- **Cybersecurity Quiz**  
+  - 10 True/False & MCQs  
+  - Instant red/green feedback + score
+
+- **Activity Log**  
+  - Tracks all actions  
+  - View in GUI or ask: “Show activity log”
+
+---
+
+## 📁 Project Structure
+
+- `Helpers/` – Art, chatbot logic  
+- `Models/` – Task, log, quiz models  
+- `Services/` – NLP, logging, reminders, quiz  
+- `Views/Controls/` – NlpControl, TaskControl, QuizControl, LogControl  
+- `MainWindow.xaml(.cs)` – Main app UI  
+- `App.xaml(.cs)` – App config  
+- `README.md` – Project info
 
 
-Getting Started
-Features & Quick Tests
-Task Assistant
+## 🧪 Quick Examples
 
-GUI: Fill Title/Description/Date → Add → appears in list + log.
+- **Task (GUI)**: Fill Title, Desc, Date → Add → Task + log  
+- **Task (Chat)**: “Add task update antivirus” → “Yes, in 2 days”  
+- **Quiz**: “Start quiz” → Answer Qs → “Correct!” / “Wrong.” → Final score  
+- **Log**: Check Log tab or ask “What have you done for me?”
 
-Chat: “Add task review privacy settings” → follow-up “Yes, in 3 days” → scheduled.
 
-Quiz
+## 🎥 Demo
 
-GUI or Start quiz in chat → 10 Qs (T/F & MCQ) → instant “Correct!”/“Wrong.” → final score.
+📺 [Watch Video](#) *(replace with your YouTube link)*
 
-NLP Flexibility
-
-Variations like “I want to create a task …”, “Can you remind me to … in 2 days?”
-
-“Tell me about password safety” → tip; “Tell me more” → second tip.
-
-“I’m worried about phishing” → empathy + tip.
-
-“I am interested in privacy” → stored preference; “What is my preference?” → tip.
-
-Activity Log
-
-GUI: Last 10 actions in Log tab.
-
-Chat: “Show activity log” or “What have you done for me?” → inline summary.
-
-🎥 Demo
-(YouTube)
-
+--
