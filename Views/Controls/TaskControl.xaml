@@ -9,21 +9,21 @@
              Background="{StaticResource TasksBackground}">
 
     <StackPanel Margin="10">
-        <!-- Page Title -->
+        
         <TextBlock Text="Task Assistant"
                    Style="{StaticResource PageTitle}"
                    Margin="0,0,0,10"/>
 
-        <!-- Add New Task -->
+        
         <GroupBox Header="Add New Task"
                   Style="{StaticResource SectionBox}"
                   Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
-                <!-- Title -->
+                
                 <StackPanel Margin="0,0,10,0">
                     <TextBlock Text="Title" Margin="0,0,0,5"/>
                     <TextBox x:Name="TitleBox" Width="200"/>
-                    <!-- validation message -->
+                    
                     <TextBlock x:Name="TitleError"
                                Text="* Title is required"
                                Style="{StaticResource ValidationText}"
@@ -31,19 +31,19 @@
                                Margin="0,2,0,0"/>
                 </StackPanel>
 
-                <!-- Description -->
+                
                 <StackPanel Margin="0,0,10,0">
                     <TextBlock Text="Description" Margin="0,0,0,5"/>
                     <TextBox x:Name="DescBox" Width="300"/>
                 </StackPanel>
 
-                <!-- Reminder Date -->
+                
                 <StackPanel Margin="0,0,10,0">
                     <TextBlock Text="Reminder Date" Margin="0,0,0,5"/>
                     <DatePicker x:Name="DatePicker" Width="150"/>
                 </StackPanel>
 
-                <!-- Add Task Button -->
+                
                 <Button Content="Add Task"
                         Click="Add_Click"
                         VerticalAlignment="Bottom"
@@ -51,7 +51,7 @@
             </StackPanel>
         </GroupBox>
 
-        <!-- Your Tasks -->
+        
         <GroupBox Header="Your Tasks"
                   Style="{StaticResource SectionBox}">
             <ListView x:Name="TaskList" Margin="10">

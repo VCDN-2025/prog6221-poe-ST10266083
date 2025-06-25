@@ -6,32 +6,42 @@ namespace CyberSecurityChatBotGUI.Views.Controls
 {
     public partial class LogControl : UserControl
     {
-        private LogService? _log;
+        private LogService? Logs;
 
         public LogControl()
         {
             InitializeComponent();
         }
 
-        public void Initialize(LogService log)
+        public void Initialize(LogService Log)
         {
-            _log = log;
-            _log.Entries.CollectionChanged += (_, __) => Refresh();
+            Logs = Log;
+            Logs.Entries.CollectionChanged += (_, __) => Refresh();
             Refresh();
         }
 
         private void Refresh()
         {
             LogList.Items.Clear();
-            int start = System.Math.Max(0, _log!.Entries.Count - 10);
-            for (int i = start; i < _log.Entries.Count; i++)
+
+            int Start = System.Math.Max(0, Logs!.Entries.Count - 10);
+
+            for (int i = Start; i < Logs.Entries.Count; i++)
             {
                 LogList.Items.Add(new TextBlock
                 {
-                    Text = _log.Entries[i].ToString(),
+                    Text = Logs.Entries[i].ToString(),
                     TextWrapping = TextWrapping.Wrap
                 });
             }
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/

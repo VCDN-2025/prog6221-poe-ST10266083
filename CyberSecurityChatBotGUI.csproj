@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Figgle" Version="0.6.2" />
+    <PackageReference Include="Figgle" Version="0.6.4" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>

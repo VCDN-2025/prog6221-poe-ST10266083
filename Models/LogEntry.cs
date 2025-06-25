@@ -5,12 +5,13 @@ namespace CyberSecurityChatBotGUI.Models
     public class LogEntry
     {
         public DateTime Timestamp { get; set; }
+
         public string Action { get; set; }
 
-        public LogEntry(string action)
+        public LogEntry(string Actions)
         {
             Timestamp = DateTime.Now;
-            Action = action;
+            Action = Actions;
         }
 
         public override string ToString()
@@ -19,3 +20,11 @@ namespace CyberSecurityChatBotGUI.Models
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/

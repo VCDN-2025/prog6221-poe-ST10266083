@@ -10,83 +10,94 @@ namespace CyberSecurityChatBotGUI.Views.Controls
 {
     public partial class NlpControl : UserControl
     {
-        private ChatBotProcessor? _bot;
-        private LogService? _log;
-        private MainWindow _host => (MainWindow)Window.GetWindow(this)!;
-        private bool _askedName = false;
+        private ChatBotProcessor? Bots;
+        private LogService? Logs;
+        private MainWindow Hosts => (MainWindow)Window.GetWindow(this)!;
+        private bool GiveName = false;
 
         public NlpControl()
         {
             InitializeComponent();
         }
 
-        public void Initialize(ChatBotProcessor bot, LogService log, string audioFile, string asciiArt)
+        public void Initialize(ChatBotProcessor Bot, LogService Log, string AudioFile, string AsciiArt)
         {
-            _bot = bot;
-            _log = log;
+            Bots = Bot;
+            Logs = Log;
 
             try
             {
-                var player = new SoundPlayer(audioFile);
+                var player = new SoundPlayer(AudioFile);
                 player.Play();
             }
-            catch { /* ignore missing file */ }
 
-            AsciiBlock.Text = asciiArt;
+            catch {}
 
-            foreach (var line in _bot.GetGreeting())
+            AsciiBlock.Text = AsciiArt;
+
+            foreach (var line in Bot.GetGreeting())
                 Append("Bot: " + line);
         }
 
-        private void Send_Click(object sender, RoutedEventArgs e)
+        private void Send_Click(object Sender, RoutedEventArgs e)
         {
-            var txt = ChatInput.Text.Trim();
-            if (string.IsNullOrEmpty(txt)) return;
+            var TXT = ChatInput.Text.Trim();
 
-            Append("You: " + txt);
+            if (string.IsNullOrEmpty(TXT)) return;
+
+            Append("You: " + TXT);
             ChatInput.Clear();
 
             IEnumerable<string> responses;
-            if (!_askedName)
+
+            if (!GiveName)
             {
-                responses = _bot!.StoreNameAndGetMenu(txt);
-                _askedName = true;
+                responses = Bots!.StoreNameAndGetMenu(TXT);
+                GiveName = true;
             }
             else
             {
-                responses = _bot!.Process(txt);
+                responses = Bots!.Process(TXT);
             }
 
-            foreach (var line in responses)
+            foreach (var Line in responses)
             {
-                if (line == "__EXIT__")
+                if (Line == "EXIT")
                 {
                     Application.Current.Shutdown();
                     return;
                 }
-                else if (line == "__OPEN_TASKS__")
+                else if (Line == "OPEN_TASKS")
                 {
-                    _host.SwitchToTasks();
+                    Hosts.SwitchToTasks();
                 }
-                else if (line == "__OPEN_QUIZ__")
+                else if (Line == "OPEN_QUIZ")
                 {
-                    _host.SwitchToQuiz();       // ← new
+                    Hosts.SwitchToQuiz();       
                 }
                 else
                 {
-                    Append("Bot: " + line);
+                    Append("Bot: " +Line);
                 }
             }
         }
 
-        private void Append(string message)
+        private void Append(string Message)
         {
             ChatOutput.Items.Add(new TextBlock
             {
-                Text = message,
+                Text = Message,
                 TextWrapping = TextWrapping.Wrap
             });
             ChatScroll.ScrollToEnd();
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/

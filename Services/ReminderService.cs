@@ -7,29 +7,30 @@ namespace CyberSecurityChatBotGUI.Services
 {
     public class ReminderService
     {
-        private readonly DispatcherTimer _timer;
-        private readonly ObservableCollection<TaskItem> _tasks;
+        private readonly DispatcherTimer Timers;
+        private readonly ObservableCollection<TaskItem> Task;
 
         public event Action<TaskItem>? ReminderTriggered;
 
         public ReminderService(ObservableCollection<TaskItem> tasks)
         {
-            _tasks = tasks;
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
-            _timer.Tick += (_, __) => CheckReminders();
-            _timer.Start();
+            Task = tasks;
+            Timers = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
+            Timers.Tick += (_, __) => CheckReminders();
+            Timers.Start();
         }
 
         private void CheckReminders()
         {
-            var now = DateTime.Now;
-            foreach (var t in _tasks)
+            var Now = DateTime.Now;
+
+            foreach (var t in Task)
             {
                 if (!t.IsCompleted
                     && t.ReminderDate.HasValue
-                    && t.ReminderDate.Value.Date == now.Date
-                    && t.ReminderDate.Value.Hour == now.Hour
-                    && t.ReminderDate.Value.Minute == now.Minute)
+                    && t.ReminderDate.Value.Date == Now.Date
+                    && t.ReminderDate.Value.Hour == Now.Hour
+                    && t.ReminderDate.Value.Minute == Now.Minute)
                 {
                     ReminderTriggered?.Invoke(t);
                 }
@@ -37,3 +38,11 @@ namespace CyberSecurityChatBotGUI.Services
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/

@@ -1,89 +1,119 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using CyberSecurityChatBotGUI.Services;
+using CyberSecurityChatBotGUI.Models;
 
 namespace CyberSecurityChatBotGUI.Views.Controls
 {
     public partial class QuizControl : UserControl
     {
-        private QuizService? _quiz;
-        private LogService? _log;
-        private int _idx, _score;
+        private QuizService? Quizes;
+        private LogService? Logs;
+        private int Indexs, Scores;
 
         public QuizControl()
         {
             InitializeComponent();
         }
 
-        public void Initialize(QuizService quiz, LogService log)
+        public void Initialize(QuizService Quiz, LogService Log)
         {
-            _quiz = quiz;
-            _log = log;
+            Quizes = Quiz;
+            Logs = Log;
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object Sender, RoutedEventArgs e)
         {
-            _idx = 0;
-            _score = 0;
-            _log?.Write("Quiz started");
+            if (Quizes == null) return;
+
+            Indexs = 0;
+            Scores = 0;
+            Logs?.Write("Quiz started");
             ShowQuestion();
         }
 
         private void ShowQuestion()
         {
-            if (_idx >= _quiz!.Questions.Count)
+            if (Quizes == null) return;
+
+            if (Indexs >= Quizes.Questions.Count)
             {
-                Prompt.Text = $"Quiz complete! Score {_score}/{_quiz.Questions.Count}";
-                Feedback.Text = _score >= _quiz.Questions.Count * 0.7
+          
+                Prompt.Text = $"Quiz complete! Score {Scores}/{Quizes.Questions.Count}";
+
+                Feedback.Text = Scores >= Quizes.Questions.Count * 0.7
                     ? "Great job!"
                     : "Keep learning to stay safe.";
+
                 OptionsPanel.Children.Clear();
                 NextBtn.IsEnabled = false;
-                _log?.Write($"Quiz finished: {_score}/{_quiz.Questions.Count}");
+
+                Logs?.Write($"Quiz finished: {Scores}/{Quizes.Questions.Count}");
                 return;
             }
 
-            var q = _quiz.Questions[_idx];
-            Prompt.Text = $"Q{_idx + 1}. {q.Prompt}";
-            Feedback.Text = "";
+            // Show the next question
+            var Q = Quizes.Questions[Indexs];
+            Prompt.Text = $"Q{Indexs + 1}. {Q.Prompt}";
+            Feedback.Text = string.Empty;
             NextBtn.IsEnabled = false;
+
             OptionsPanel.Children.Clear();
 
-            for (int i = 0; i < q.Options.Count; i++)
+            for (int i = 0; i < Q.Options.Count; i++)
             {
-                var rb = new RadioButton
+                var RB = new RadioButton
                 {
-                    Content = q.Options[i],
+                    Content = Q.Options[i],
                     Tag = i,
                     GroupName = "opt",
                     Margin = new Thickness(0, 5, 0, 5)
                 };
-                rb.Checked += Option_Checked;
-                OptionsPanel.Children.Add(rb);
+                RB.Checked += Option_Checked;
+                OptionsPanel.Children.Add(RB);
             }
 
-            ScoreText.Text = $"Score: {_score}/{_quiz.Questions.Count}";
+            ScoreText.Text = $"Score: {Scores}/{Quizes.Questions.Count}";
         }
 
-        private void Option_Checked(object sender, RoutedEventArgs e)
+        private void Option_Checked(object Sender, RoutedEventArgs e)
         {
-            var picked = (int)((RadioButton)sender).Tag!;
-            var q = _quiz!.Questions[_idx];
-            bool ok = picked == q.CorrectIndex;
+            if (Quizes == null) return;
 
-            Feedback.Text = ok
-                ? "Correct! " + q.Explanation
-                : "Wrong. " + q.Explanation;
-            if (ok) { _score++; _log?.Write($"Quiz Q{_idx + 1} correct"); }
-            else { _log?.Write($"Quiz Q{_idx + 1} wrong"); }
+            var Picked = (int)((RadioButton)Sender).Tag!;
+            var Q = Quizes.Questions[Indexs];
+            bool correct = Picked == Q.Index;
+
+            // Show feedback and log
+            Feedback.Text = correct
+                ? "Correct! " + Q.Explanation
+                : "Wrong. " + Q.Explanation;
+
+            if (correct)
+            {
+                Scores++;
+                Logs?.Write($"Quiz Q{Indexs + 1} correct");
+            }
+            else
+            {
+                Logs?.Write($"Quiz Q{Indexs + 1} wrong");
+            }
 
             NextBtn.IsEnabled = true;
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private void Next_Click(object Sender, RoutedEventArgs e)
         {
-            _idx++;
+            Indexs++;
             ShowQuestion();
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/ 

@@ -6,7 +6,7 @@ namespace CyberSecurityChatBotGUI.Views
 {
     public partial class MainWindow : Window
     {
-        private bool _initialized;
+        private bool Initailized;
 
         public MainWindow()
         {
@@ -19,34 +19,42 @@ namespace CyberSecurityChatBotGUI.Views
         private void OnHome_Quiz(object sender, RoutedEventArgs e) => ShowTabsAndSelect(2);
         private void OnHome_Log(object sender, RoutedEventArgs e) => ShowTabsAndSelect(3);
 
-        // Called from controls:
         public void SwitchToTasks() => ShowTabsAndSelect(1);
-        public void SwitchToQuiz() => ShowTabsAndSelect(2);   // ← new
+        public void SwitchToQuiz() => ShowTabsAndSelect(2);  
 
-        private void ShowTabsAndSelect(int tabIndex)
+        private void ShowTabsAndSelect(int TabIndex)
         {
             HomeGrid.Visibility = Visibility.Collapsed;
             MainGrid.Visibility = Visibility.Visible;
-            MainTab.SelectedIndex = tabIndex;
+            MainTab.SelectedIndex = TabIndex;
 
-            if (_initialized) return;
-            _initialized = true;
+            if (Initailized) return;
 
-            var log = new LogService();
-            var nlp = new NlpService();
-            var quiz = new QuizService();
-            var reminder = new ReminderService(TaskCtrl.Tasks);
-            var bot = new ChatBotProcessor(nlp, log, TaskCtrl.Tasks);
+            Initailized = true;
+
+            var Log = new LogService();
+            var NLP = new NlpService();
+            var Quiz = new QuizService();
+            var Reminder = new ReminderService(TaskCtrl.Tasks);
+            var Bot = new ChatBotProcessor(NLP, Log, TaskCtrl.Tasks);
 
             NlpCtrl.Initialize(
-                bot,
-                log,
-                audioFile: "Assets/greeting.wav",
-                asciiArt: Art.AsciiArt()
+                Bot,
+                Log,
+                AudioFile: "Assets/greeting.wav",
+                AsciiArt: Art.AsciiArt()
             );
-            TaskCtrl.Initialize(reminder, log);
-            QuizCtrl.Initialize(quiz, log);
-            LogCtrl.Initialize(log);
+            TaskCtrl.Initialize(Reminder, Log);
+            QuizCtrl.Initialize(Quiz, Log);
+            LogCtrl.Initialize(Log);
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/ 

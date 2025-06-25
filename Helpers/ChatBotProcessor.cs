@@ -10,215 +10,212 @@ namespace CyberSecurityChatBotGUI.Helpers
 {
     public class ChatBotProcessor
     {
-        private readonly NlpService _nlp;
-        private readonly LogService _log;
-        private readonly ObservableCollection<TaskItem> _tasks;
-        private readonly Dictionary<string, string> _data = new(StringComparer.OrdinalIgnoreCase);
-        private string _finalTopic = string.Empty;
+        private NlpService Context;
+        private LogService Log;
+        private ObservableCollection<TaskItem> Tasks;
+        private Dictionary<string, string> Data = new(StringComparer.OrdinalIgnoreCase);
+        private string LastTopic = string.Empty;
 
-        // For chat‐driven task/reminder flow
-        private string _pendingTaskTitle = null!;
-        private bool _awaitingReminder = false;
+        // Reminder flow
+        private string TaskTitle = null!;
+        private bool Reminder = false;
 
-        public ChatBotProcessor(NlpService nlp, LogService log, ObservableCollection<TaskItem> tasks)
+        public ChatBotProcessor(NlpService WordLogic, LogService Logs, ObservableCollection<TaskItem> Task)
         {
-            _nlp = nlp;
-            _log = log;
-            _tasks = tasks;
+            Context = WordLogic;
+            Log = Logs;
+            Tasks = Task;
         }
 
-        // 1) Initial name prompt
+        // Name prompt
         public List<string> GetGreeting()
         {
-            _log.Write("Displayed name prompt");
+            Log.Write("Displayed name prompt");
             return new List<string> { "Please enter your name:" };
         }
 
-        // 2) After name, show menu
-        public List<string> StoreNameAndGetMenu(string rawName)
+        // Show menu
+        public List<string> StoreNameAndGetMenu(string FName)
         {
-            var lines = new List<string>();
-            if (string.IsNullOrWhiteSpace(rawName))
+            var Lines = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(FName))
             {
-                lines.Add("Name cannot be empty. Please enter your name:");
-                return lines;
+                Lines.Add("Name cannot be empty. Please enter your name:");
+                return Lines;
             }
 
-            var name = rawName.Trim();
-            _data["Name"] = name;
-            _log.Write($"Stored user name: {name}");
+            var Name = FName.Trim();
+            Data["Name"] = Name;
+            Log.Write($"Stored user name: {Name}");
+            Lines.Add($"Nice to meet you, {Name}! How can I assist you today?");
+            Lines.Add(new string('═', 60));
+            Lines.Add("Here are some things you can ask me:");
+            Lines.Add(" • How are you?");
+            Lines.Add(" • What’s your purpose?");
+            Lines.Add(" • What can I ask you about?");
+            Lines.Add(" • Tell me about password safety");
+            Lines.Add(" • Give me a phishing tip");
+            Lines.Add(" • Any scam emails I should watch for?");
+            Lines.Add(" • How do I protect my privacy?");
+            Lines.Add(" • I'm interested in [topic]");
+            Lines.Add(" • What is my preference?");
+            Lines.Add(" • Tell me more");
+            Lines.Add(" • Add task [title] (e.g. “Add task review privacy settings”)");
+            Lines.Add(" • Remind me to [action] in [N] days (e.g. “Remind me to update my password in 5 days”)");
+            Lines.Add(" • Show tasks / View my tasks");
+            Lines.Add(" • Start quiz");
+            Lines.Add(" • Show activity log / What have you done for me?");
+            Lines.Add(" • exit (or quit)");
+            Lines.Add(new string('═', 60));
 
-            lines.Add($"Nice to meet you, {name}! How can I assist you today?");
-            lines.Add(new string('═', 60));
-            lines.Add("Here are some things you can ask me:");
-            lines.Add(" • How are you?");
-            lines.Add(" • What’s your purpose?");
-            lines.Add(" • What can I ask you about?");
-            lines.Add(" • Tell me about password safety");
-            lines.Add(" • Give me a phishing tip");
-            lines.Add(" • Any scam emails I should watch for?");
-            lines.Add(" • How do I protect my privacy?");
-            lines.Add(" • I'm interested in [topic]");
-            lines.Add(" • What is my preference?");
-            lines.Add(" • Tell me more");
-            lines.Add(" • Add task [title] (e.g. “Add task review privacy settings”)");
-            lines.Add(" • Remind me to [action] in [N] days (e.g. “Remind me to update my password in 5 days”)");
-            lines.Add(" • Show tasks / View my tasks");
-            lines.Add(" • Start quiz");
-            lines.Add(" • Show activity log / What have you done for me?");
-            lines.Add(" • exit (or quit)");
-            lines.Add(new string('═', 60));
-
-            return lines;
+            return Lines;
         }
 
-        // 3) Main processor
-        public IEnumerable<string> Process(string input)
+        // Main processor
+        public IEnumerable<string> Process(string Input)
         {
-            _log.Write($"User: {input}");
-            if (string.IsNullOrWhiteSpace(input))
-                return new[] { "I didn't catch that. Could you please say something?" };
+            Log.Write($"User: {Input}");
 
-            var trimmed = input.Trim();
+            if (string.IsNullOrWhiteSpace(Input))
+                return new[] { "I didn't catch that. Could you please say something else?" };
 
-            // --- TASK 1: One‐shot reminder ---
-            var oneShot = Regex.Match(trimmed,
+            var Trimmed = Input.Trim();
+
+            // TASK 1: One-shot reminder
+            var OneShot = Regex.Match(Trimmed,
                 @"\bremind me to (.+?) in (\d+) days?\b",
                 RegexOptions.IgnoreCase);
-            if (oneShot.Success)
+
+            if (OneShot.Success)
             {
-                var title = oneShot.Groups[1].Value.Trim();
-                var days = int.Parse(oneShot.Groups[2].Value);
-                var task = new TaskItem(title, description: "", reminderDate: DateTime.Now.AddDays(days));
-                _tasks.Add(task);
-                _log.Write($"Added & scheduled task via chat: {title} in {days} days");
+                var Title = OneShot.Groups[1].Value.Trim();
+                var Days = int.Parse(OneShot.Groups[2].Value);
+                var newTask = new TaskItem(Title, description: "", reminderDate: DateTime.Now.AddDays(Days));
+
+                Tasks.Add(newTask);
+                Log.Write($"Added and scheduled task with chat: {Title} in {Days} days");
                 return new[]
                 {
-                    $"Got it—I'll remind you to '{title}' in {days} days on {task.ReminderDate:yyyy-MM-dd}."
+                    $"Got it—I'll remind you to '{Title}' in {Days} days on {newTask.ReminderDate:yyyy-MM-dd}."
                 };
             }
 
-            // --- TASK 1: Chat‐driven "Add task ..." ---
-            var addMatch = Regex.Match(trimmed,
+            // TASK 1: Chat-driven "Add task"
+            var Matched = Regex.Match(Trimmed,
                 @"\b(?:i want to )?(?:add|create) (?:a )?task (.+)$",
                 RegexOptions.IgnoreCase);
-            if (addMatch.Success)
+
+            if (Matched.Success)
             {
-                _pendingTaskTitle = addMatch.Groups[1].Value.Trim();
-                _tasks.Add(new TaskItem(_pendingTaskTitle, description: ""));
-                _log.Write($"Added task via chat: {_pendingTaskTitle}");
-                _awaitingReminder = true;
+                TaskTitle = Matched.Groups[1].Value.Trim();
+                Tasks.Add(new TaskItem(TaskTitle, description: ""));
+                Log.Write($"Added task with chat: {TaskTitle}");
+                Reminder = true;
                 return new[]
                 {
-                    $"Task '{_pendingTaskTitle}' added. Would you like to set a reminder? (e.g. \"Yes, in 3 days\" or \"No\")"
+                    $"Task '{TaskTitle}' added. Would you like to set a reminder? (e.g. \"Yes, in 3 days\" or \"No\")"
                 };
             }
 
-            // --- TASK 1: Reminder follow‐up ---
-            if (_awaitingReminder &&
-                (trimmed.StartsWith("yes", StringComparison.OrdinalIgnoreCase) ||
-                 trimmed.StartsWith("no", StringComparison.OrdinalIgnoreCase)))
+            // TASK 1: Reminder follow-up
+            if (Reminder &&
+                (Trimmed.StartsWith("yes", StringComparison.OrdinalIgnoreCase) ||
+                 Trimmed.StartsWith("no", StringComparison.OrdinalIgnoreCase)))
             {
-                _awaitingReminder = false;
-                if (trimmed.StartsWith("no", StringComparison.OrdinalIgnoreCase))
+                Reminder = false;
+
+                if (Trimmed.StartsWith("no", StringComparison.OrdinalIgnoreCase))
                 {
-                    _log.Write($"No reminder for '{_pendingTaskTitle}'");
-                    return new[] { $"Okay—no reminder set for '{_pendingTaskTitle}'." };
+                    Log.Write($"No reminder for '{TaskTitle}'");
+                    return new[] { $"Okay, no reminder set for '{TaskTitle}'." };
                 }
 
-                var rem = Regex.Match(trimmed, @"in (\d+) days?", RegexOptions.IgnoreCase);
-                if (rem.Success && int.TryParse(rem.Groups[1].Value, out var days))
+                var Remebers = Regex.Match(Trimmed, @"in (\d+) days?", RegexOptions.IgnoreCase);
+
+                if (Remebers.Success && int.TryParse(Remebers.Groups[1].Value, out var days))
                 {
-                    var task = _tasks.Last(t => t.Title == _pendingTaskTitle);
-                    task.ReminderDate = DateTime.Now.AddDays(days);
-                    _log.Write($"Reminder set for '{_pendingTaskTitle}' in {days} days");
+                    var t = Tasks.Last(ti => ti.Title == TaskTitle);
+                    t.ReminderDate = DateTime.Now.AddDays(days);
+                    Log.Write($"Reminder set for '{TaskTitle}' in {days} days");
                     return new[]
                     {
-                        $"Got it—I'll remind you about '{_pendingTaskTitle}' on {task.ReminderDate:yyyy-MM-dd}."
+                        $"Got it, I'll remind you about '{TaskTitle}' on {t.ReminderDate:yyyy-MM-dd}."
                     };
                 }
 
                 return new[] { "Sorry, I didn't catch that timeframe. Please say \"Yes, in 3 days\" or \"No.\"" };
             }
 
-            // --- TASK 1: Tab‐switch chat command ---
-            if (Regex.IsMatch(trimmed, @"\b(?:show|view)\s+(?:my\s+)?tasks\b", RegexOptions.IgnoreCase))
+            // TASK 1: Tab-switch chat command
+            if (Regex.IsMatch(Trimmed, @"\b(?:show|view)\s+(?:my\s+)?tasks\b", RegexOptions.IgnoreCase))
             {
-                _log.Write("Switching to Tasks via chat");
-                return new[] { "__OPEN_TASKS__" };
+                Log.Write("Switching to Tasks");
+                return new[] { "OPEN_TASKS" };
             }
 
-            // --- TASK 2: Start quiz shortcut ---
-            if (trimmed.Equals("start quiz", StringComparison.OrdinalIgnoreCase))
+            // TASK 2: Start quiz shortcut
+            if (Trimmed.Equals("start quiz", StringComparison.OrdinalIgnoreCase))
             {
-                _log.Write("Switching to Quiz via chat");
-                return new[] { "__OPEN_QUIZ__" };
+                Log.Write("Switching to Quiz");
+                return new[] { "OPEN_QUIZ" };
             }
 
-            // --- EXIT ---
-            if (trimmed.Equals("exit", StringComparison.OrdinalIgnoreCase) ||
-                trimmed.Equals("quit", StringComparison.OrdinalIgnoreCase))
-                return new[] { "__EXIT__" };
+            // EXIT
+            if (Trimmed.Equals("exit", StringComparison.OrdinalIgnoreCase) ||
+                Trimmed.Equals("quit", StringComparison.OrdinalIgnoreCase))
+                return new[] { "EXIT" };
 
-            // --- Part 1 & 2: chit-chat / tips / sentiment / NLP / preferences ---
+            // Part 1 & 2: chit-chat / tips / sentiment / preferences
 
-            // How are you?
-            if (trimmed.Contains("how are you", StringComparison.OrdinalIgnoreCase))
+            if (Trimmed.Contains("how are you", StringComparison.OrdinalIgnoreCase))
             {
-                _log.Write("Answered 'how are you'");
+                Log.Write("Answered 'how are you'");
                 return new[] { "I'm doing well—thanks for asking! What can I help you with?" };
             }
-
-            // Purpose
-            if (trimmed.Contains("purpose", StringComparison.OrdinalIgnoreCase))
+            if (Trimmed.Contains("purpose", StringComparison.OrdinalIgnoreCase))
             {
-                _log.Write("Explained purpose");
+                Log.Write("Explained purpose");
                 return new[] { "I'm here to give you practical cybersecurity tips and answer your questions." };
             }
-
-            // What can I ask
-            if (trimmed.Contains("what can i ask", StringComparison.OrdinalIgnoreCase))
+            if (Trimmed.Contains("what can i ask", StringComparison.OrdinalIgnoreCase))
             {
-                _log.Write("Explained available questions");
-                return new[]
-                {
-                    "You can ask about passwords, scams, privacy, phishing, tasks, or start the quiz."
-                };
+                Log.Write("Explained available questions");
+                return new[] { "You can ask about passwords, scams, privacy, phishing, tasks or start the quiz." };
             }
 
             // Activity log
-            if (trimmed.Contains("what have you done for me", StringComparison.OrdinalIgnoreCase) ||
-                trimmed.Contains("show activity log", StringComparison.OrdinalIgnoreCase))
+            if (Trimmed.Contains("what have you done for me", StringComparison.OrdinalIgnoreCase) ||
+                Trimmed.Contains("show activity log", StringComparison.OrdinalIgnoreCase))
                 return SummarizeLog(10, "Activity Log (last 10 actions):");
 
-            // Explicit interest: "I am interested in X"
-            var prefMatch = Regex.Match(trimmed,
+            // "I am interested in"
+            var BeforeMatch = Regex.Match(Trimmed,
                 @"\b(?:i'?m|i am) interested in (.+)$",
                 RegexOptions.IgnoreCase);
-            if (prefMatch.Success)
-            {
-                var topic = prefMatch.Groups[1].Value.Trim();
-                _data["preference"] = topic;
-                _log.Write($"Stored preference: {topic}");
 
-                // if we have tips for it
-                var tips = _nlp.GetTips(topic);
-                bool known = tips.Any();
+            if (BeforeMatch.Success)
+            {
+                var Topics = BeforeMatch.Groups[1].Value.Trim();
+                Data["preference"] = Topics;
+                Log.Write($"Stored preference: {Topics}");
+                var Tips = Context.GetTips(Topics);
+                bool Known = Tips.Any();
                 return new[]
                 {
-                    known
-                        ? $"Got it! I'll remember your interest in {topic}."
-                        : $"Understood—I'll keep an eye out for tips on {topic}."
+                    Known
+                        ? $"Got it! I'll remember your interest in {Topics}."
+                        : $"Understood—I'll keep an eye out for tips on {Topics}."
                 };
             }
 
             // Recall preference
-            if (trimmed.Contains("what is my preference", StringComparison.OrdinalIgnoreCase))
+            if (Trimmed.Contains("what is my preference", StringComparison.OrdinalIgnoreCase))
             {
-                if (_data.TryGetValue("preference", out var pref) && _nlp.GetTips(pref).Any())
+                if (Data.TryGetValue("preference", out var pref) && Context.GetTips(pref).Any())
                 {
-                    var tip = _nlp.PickRandomTip(pref);
-                    _log.Write($"Tip for preference {pref}: {tip}");
+                    var tip = Context.PickRandomTip(pref);
+                    Log.Write($"Tip for preference {pref}: {tip}");
                     return new[]
                     {
                         $"Since you're interested in {pref}, here's a tip:",
@@ -227,74 +224,106 @@ namespace CyberSecurityChatBotGUI.Helpers
                         new string('═', 60)
                     };
                 }
-                else
-                {
-                    return new[] { "You haven't told me your preference yet." };
-                }
+                return new[] { "You haven't told me your preference yet." };
             }
 
             // Empathy + topic
-            if ((trimmed.Contains("worried", StringComparison.OrdinalIgnoreCase) ||
-                 trimmed.Contains("anxious", StringComparison.OrdinalIgnoreCase) ||
-                 trimmed.Contains("frustrated", StringComparison.OrdinalIgnoreCase)) &&
-                _nlp.ContainsTopic(trimmed, out var emoTopic))
+            if ((Trimmed.Contains("worried", StringComparison.OrdinalIgnoreCase) ||
+                 Trimmed.Contains("anxious", StringComparison.OrdinalIgnoreCase) ||
+                 Trimmed.Contains("frustrated", StringComparison.OrdinalIgnoreCase)) &&
+                Context.ContainsTopic(Trimmed, out var emoTopic))
             {
-                _log.Write("Empathy intro");
-                var t2 = _nlp.PickRandomTip(emoTopic);
+                Log.Write("Empathy intro");
+                var SecondTip = Context.PickRandomTip(emoTopic);
                 return new[]
                 {
                     "I understand—it can be stressful. Here’s what I recommend:",
                     new string('═', 60),
-                    t2,
+                    SecondTip,
                     new string('═', 60)
                 };
             }
 
             // Keyword-based tip
-            if (_nlp.ContainsTopic(trimmed, out var topicKey))
+            if (Context.ContainsTopic(Trimmed, out var Key))
             {
-                _finalTopic = topicKey;
-                var tip = _nlp.PickRandomTip(topicKey);
-                _log.Write($"Tip on {topicKey}: {tip}");
+                LastTopic = Key;
+                var Tips = Context.PickRandomTip(Key);
+                Log.Write($"Tip on {Key}: {Tips}");
                 return new[]
                 {
                     new string('═', 60),
-                    tip,
+                    Tips,
                     new string('═', 60)
                 };
             }
 
             // Tell me more
-            if (trimmed.Contains("tell me more", StringComparison.OrdinalIgnoreCase) &&
-                !string.IsNullOrEmpty(_finalTopic))
+            if (Trimmed.Contains("tell me more", StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrEmpty(LastTopic))
             {
-                var moreTip = _nlp.PickRandomTip(_finalTopic);
-                _log.Write($"More tip on {_finalTopic}: {moreTip}");
+                var ExtraTip = Context.PickRandomTip(LastTopic);
+                Log.Write($"Extra tip on {LastTopic}: {ExtraTip}");
                 return new[]
                 {
-                    $"Sure—here’s more on {_finalTopic}:",
+                    $"Sure—here’s more on {LastTopic}:",
                     new string('═', 60),
-                    moreTip,
+                    ExtraTip,
                     new string('═', 60)
                 };
             }
 
             // Fallback
-            _log.Write($"Unknown input: {input}");
+            Log.Write($"Unknown input: {Input}");
             return new[]
             {
-                "Sorry, I didn't get that. Try asking about password, scam, privacy, phishing, tasks, or quiz."
+                "Sorry, I didn't get that. Try asking about password, scam, privacy, phishing, tasks or quiz."
             };
         }
 
-        private List<string> SummarizeLog(int count, string header)
+        private List<string> SummarizeLog(int Counts, string Heading)
         {
-            var list = new List<string> { header };
-            var entries = _log.Entries;
-            int start = Math.Max(0, entries.Count - count);
-            for (int i = start; i < entries.Count; i++)
-                list.Add($"{i - start + 1}. {entries[i]}");
-            return list;
+            var List = new List<string> { Heading };
+            var Entries = Log.Entries;
+            int Start = Math.Max(0, Entries.Count - Counts);
+            for (int i = Start; i < Entries.Count; i++)
+                List.Add($"{i - Start + 1}. {Entries[i]}");
+            return List;
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Dictionary with list of strings as value
+       * Author: stackoverflow
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://stackoverflow.com/questions/17887407/dictionary-with-list-of-strings-as-value
+**************************************/
+
+/**************************************
+       * Reference list  
+       * Title : Exception-handling statements - throw, try-catch, try-finally, and try-catch-finally
+       * Author: learn microsoft
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/exception-handling-statements
+**************************************/
+
+/**************************************
+       * Reference list  
+       * Title : C# Exceptions - Delegates
+       * Author: geeksforgeeks
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://www.geeksforgeeks.org/c-sharp-delegates/
+**************************************/
+
+/**************************************
+       * Reference list  
+       * Title : Help with all code
+       * Author: ChatGPT
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/6831c044-7f6c-8008-848a-25aa7e1f1cee
+**************************************/

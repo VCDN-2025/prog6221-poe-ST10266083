@@ -5,7 +5,6 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <!-- EXISTING GLOBAL STYLES -->
             <Style x:Key="PageTitle" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="24"/>
                 <Setter Property="FontWeight" Value="Bold"/>
@@ -28,7 +27,6 @@
                 <Setter Property="Margin" Value="5"/>
             </Style>
 
-            <!-- NEW TAB BACKGROUNDS -->
             <Color x:Key="ChatBgColor">#FFEEF7FF</Color>
             <Color x:Key="TasksBgColor">#FFF2FFF0</Color>
             <Color x:Key="QuizBgColor">#FFFFF9EA</Color>
@@ -39,7 +37,6 @@
             <SolidColorBrush x:Key="QuizBackground" Color="{StaticResource QuizBgColor}"/>
             <SolidColorBrush x:Key="LogBackground"  Color="{StaticResource LogBgColor}"/>
 
-            <!-- NEW TEXT STYLES -->
             <Style x:Key="ErrorText" TargetType="TextBlock">
                 <Setter Property="Foreground" Value="Red"/>
                 <Setter Property="FontWeight" Value="Bold"/>
@@ -49,7 +46,6 @@
                 <Setter Property="FontWeight" Value="Bold"/>
             </Style>
 
-            <!-- ValidationText alias so your controls finding ValidationText get the same red style -->
             <Style x:Key="ValidationText" TargetType="TextBlock" BasedOn="{StaticResource ErrorText}" />
 
         </ResourceDictionary>

@@ -6,29 +6,29 @@ namespace CyberSecurityChatBotGUI.Services
 {
     public class QuizService
     {
-        private readonly List<QuizQuestion> _questions = new();
-        public IReadOnlyList<QuizQuestion> Questions => _questions;
+        private readonly List<QuizQuestion> Question = new();
+        public IReadOnlyList<QuizQuestion> Questions => Question;
 
         public QuizService()
         {
-            // 1) MCQ
-            _questions.Add(new QuizQuestion(
+            // MCQ
+            Question.Add(new QuizQuestion(
                 "What is the strongest form of user authentication?",
                 new List<string> { "Single password", "Security questions", "Password + Two-Factor Authentication", "Fingerprint scan only" },
                 2,
-                "Two-Factor Authentication (2FA) pairs something you know with something you have, making it much stronger."
+                "Two-Factor Authentication (2FA) pairs something you know with something you have making it much stronger."
             ));
 
-            // 2) TRUE / FALSE
-            _questions.Add(new QuizQuestion(
+            // TRUE / FALSE
+            Question.Add(new QuizQuestion(
                 "True or False: You should never open attachments from unknown senders.",
                 new List<string> { "True", "False" },
                 0,
                 "True—unknown attachments often carry malware."
             ));
 
-            // 3) MCQ
-            _questions.Add(new QuizQuestion(
+            // MCQ
+            Question.Add(new QuizQuestion(
                 "Which of these is a sign of a phishing email?",
                 new List<string>
                 {
@@ -41,24 +41,24 @@ namespace CyberSecurityChatBotGUI.Services
                 "Phishers often send urgent messages with suspicious links from spoofed addresses."
             ));
 
-            // 4) TRUE / FALSE
-            _questions.Add(new QuizQuestion(
+            // TRUE / FALSE
+            Question.Add(new QuizQuestion(
                 "True or False: Using the same password for multiple accounts is safe if it's long enough.",
                 new List<string> { "True", "False" },
                 1,
                 "False—unique passwords per account prevent a single breach from compromising all."
             ));
 
-            // 5) MCQ
-            _questions.Add(new QuizQuestion(
+            // MCQ
+            Question.Add(new QuizQuestion(
                 "What does VPN stand for?",
                 new List<string> { "Virtual Private Network", "Verified Public Network", "Virtual Public Node", "Verified Private Node" },
                 0,
                 "VPN stands for Virtual Private Network, encrypting your traffic over public Wi-Fi."
             ));
 
-            // 6) MCQ
-            _questions.Add(new QuizQuestion(
+            // MCQ
+            Question.Add(new QuizQuestion(
                 "Which practice helps protect your privacy on social media?",
                 new List<string>
                 {
@@ -71,16 +71,16 @@ namespace CyberSecurityChatBotGUI.Services
                 "By restricting who can see your posts to trusted contacts, you limit data exposure."
             ));
 
-            // 7) TRUE / FALSE
-            _questions.Add(new QuizQuestion(
+            // TRUE / FALSE
+            Question.Add(new QuizQuestion(
                 "True or False: You should update your software regularly to patch vulnerabilities.",
                 new List<string> { "True", "False" },
                 0,
                 "True—updates often include security patches that close vulnerabilities attackers exploit."
             ));
 
-            // 8) MCQ
-            _questions.Add(new QuizQuestion(
+            // MCQ
+            Question.Add(new QuizQuestion(
                 "What should you do before clicking on a link in an email?",
                 new List<string>
                 {
@@ -93,16 +93,16 @@ namespace CyberSecurityChatBotGUI.Services
                 "Hovering over the link shows the real destination—if it’s suspicious, don’t click."
             ));
 
-            // 9) TRUE / FALSE
-            _questions.Add(new QuizQuestion(
+            // TRUE / FALSE
+            Question.Add(new QuizQuestion(
                 "True or False: HTTPS means the connection is encrypted.",
                 new List<string> { "True", "False" },
                 0,
                 "True—HTTPS indicates encryption via TLS/SSL, protecting data in transit."
             ));
 
-            // 10) MCQ
-            _questions.Add(new QuizQuestion(
+            // MCQ
+            Question.Add(new QuizQuestion(
                 "Which of these should you use to manage many strong, unique passwords?",
                 new List<string>
                 {
@@ -116,12 +116,30 @@ namespace CyberSecurityChatBotGUI.Services
             ));
 
             // Shuffle questions so each quiz run is different
-            var rnd = new Random();
-            for (int i = 0; i < _questions.Count; i++)
+            var RQ = new Random();
+
+            for (int i = 0; i < Question.Count; i++)
             {
-                int j = rnd.Next(i, _questions.Count);
-                (_questions[i], _questions[j]) = (_questions[j], _questions[i]);
+                int j = RQ.Next(i, Question.Count);
+                (Question[i], Question[j]) = (Question[j], Question[i]);
             }
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/
+
+/**************************************
+       * Reference list  
+       * Title : Create a simple multiple choice quiz game in Visual Studio
+       * Author: Moo ICT – Project Based Tutorials
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://www.mooict.com/c-tutorial-create-a-simple-multiple-choice-quiz-game-in-visual-studio/
+**************************************/

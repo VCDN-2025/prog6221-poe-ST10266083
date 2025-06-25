@@ -18,12 +18,27 @@ namespace CyberSecurityChatBotGUI.Models
         }
 
         public override string ToString()
+
         {
-            string reminderStr = ReminderDate.HasValue
+            string Rstriing = ReminderDate.HasValue
                 ? ReminderDate.Value.ToString("yyyy-MM-dd")
                 : "No Reminder";
             string status = IsCompleted ? "✓" : "✗";
-            return $"{Title} | {Description} | {reminderStr} | Completed: {status}";
+            return $"{Title} | {Description} | {Rstriing} | Completed: {status}";
+
+        }
+
+        internal void Add(TaskItem Task)
+        {
+            throw new NotImplementedException();
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/

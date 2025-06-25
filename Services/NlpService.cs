@@ -5,15 +5,15 @@ namespace CyberSecurityChatBotGUI.Services
 {
     public class NlpService
     {
-        private readonly Dictionary<string, List<string>> _topicResponses;
+        private readonly Dictionary<string, List<string>> Responses;
 
         public NlpService()
         {
-            _topicResponses = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+            Responses = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
             {
                 ["password"] = new List<string>
                 {
-                    "Use at least 12 characters mixing uppercase, lowercase, numbers, and symbols.",
+                    "Use at least 12 characters mixing uppercase, lowercase, numbers and symbols.",
                     "Never reuse passwords; use a password manager for unique credentials.",
                     "Rotate your passwords every 3 months to limit exposure risk.",
                     "Enable two-factor authentication (2FA) wherever possible."
@@ -42,26 +42,44 @@ namespace CyberSecurityChatBotGUI.Services
             };
         }
 
-        public IEnumerable<string> GetTips(string topic)
-            => _topicResponses.TryGetValue(topic, out var t) ? t : Array.Empty<string>();
+        public IEnumerable<string> GetTips(string Topic)
+            => Responses.TryGetValue(Topic, out var t) ? t : Array.Empty<string>();
 
-        public string PickRandomTip(string topic)
+        public string PickRandomTip(string Topic)
         {
-            var tips = new List<string>(GetTips(topic));
-            if (tips.Count == 0) return "Sorry, I don’t have any tips on that right now.";
-            return tips[new Random().Next(tips.Count)];
+            var Tips = new List<string>(GetTips(Topic));
+
+            if (Tips.Count == 0) return "Sorry, I don’t have any tips on that right now.";
+
+            return Tips[new Random().Next(Tips.Count)];
         }
 
-        public bool ContainsTopic(string text, out string found)
+        public bool ContainsTopic(string Text, out string Found)
         {
-            foreach (var key in _topicResponses.Keys)
-                if (text.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
+            foreach (var key in Responses.Keys)
+                if (Text.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    found = key;
+                    Found = key;
                     return true;
                 }
-            found = null!;
+            Found = null!;
             return false;
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Dictionary with list of strings as value
+       * Author: stackoverflow
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://stackoverflow.com/questions/17887407/dictionary-with-list-of-strings-as-value
+**************************************/
+/**************************************
+       * Reference list  
+       * Title : Help with some of my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/

@@ -4,17 +4,28 @@ namespace CyberSecurityChatBotGUI.Models
 {
     public class QuizQuestion
     {
-        public string Prompt { get; set; }
-        public List<string> Options { get; set; }   
-        public int CorrectIndex { get; set; }       
-        public string Explanation { get; set; }
+        public string Prompt { get; }
 
-        public QuizQuestion(string prompt, List<string> options, int correctIndex, string explanation)
+        public IReadOnlyList<string> Options { get; }
+
+        public int Index { get; }
+
+        public string Explanation { get; }
+
+        public QuizQuestion(string prompt, List<string> options, int index, string explanation)
         {
             Prompt = prompt;
             Options = options;
-            CorrectIndex = correctIndex;
+            Index = index;
             Explanation = explanation;
         }
     }
 }
+/**************************************
+       * Reference list  
+       * Title : Help with my code
+       * Author: ChatGPT
+       * Date 2025/06/24
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+**************************************/
