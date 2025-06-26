@@ -29,7 +29,31 @@ Project Structure
 - `MainWindow.xaml(.cs)` – Main app UI  
 - `App.xaml(.cs)` – App config  
 - `README.md` – Project info
+  
+Setup
+1. Clone 
+   ```bash
+   git clone <repo-url>
+Open
+Load the solution in Visual Studio 2022 (or later).
 
+Restore & Build
+Restore NuGet packages → Build → Run.
+
+Usage
+Type any cybersecurity question or help.
+
+Tasks
+Switch to Tasks tab
+Add task: Enable 2FA | Set up 2FA on email | 2025-07-01
+
+Quiz
+Switch to Quiz tab
+Or type Start quiz
+
+Log
+Switch to Log tab
+Or type Show activity log
   
 Screen shots of each page:
 ![image](https://github.com/user-attachments/assets/ad1b0724-6306-4e48-90fa-072cec9a27c4)
