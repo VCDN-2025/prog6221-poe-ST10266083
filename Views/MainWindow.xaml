@@ -4,7 +4,7 @@
         xmlns:ctrl="clr-namespace:CyberSecurityChatBotGUI.Views.Controls"
         Title="CyberSecurity ChatBot" Height="620" Width="900">
     <Grid>
-        <!-- ===== Splash / Home Screen ===== -->
+        
         <Grid x:Name="HomeGrid">
             <StackPanel VerticalAlignment="Center"
                   HorizontalAlignment="Center"
@@ -33,7 +33,7 @@
             </StackPanel>
         </Grid>
 
-        <!-- ===== Your actual Tabbed UI (hidden at first) ===== -->
+        
         <Grid x:Name="MainGrid" Visibility="Collapsed">
             <TabControl x:Name="MainTab">
                 <TabItem Header="Chatbot">

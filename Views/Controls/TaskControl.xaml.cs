@@ -27,60 +27,58 @@ namespace CyberSecurityChatBotGUI.Views.Controls
                 MessageBox.Show($"Reminder: {t.Title}", "Reminder");
         }
 
-        private void Add_Click(object Sender, RoutedEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
             var Title = TitleBox.Text.Trim();
-
-            if (string.IsNullOrEmpty(Title))
-            {
-                TitleError.Visibility = Visibility.Visible;
-                return;
-            }
-            TitleError.Visibility = Visibility.Collapsed;
-
             var Description = DescBox.Text.Trim();
-            var ReminderDate = DatePicker.SelectedDate;
+            var KeepDate = DatePicker.SelectedDate;
 
-            var Task = new TaskItem(Title, Description, ReminderDate);
+            bool ShowsError = false;
+
+            TitleError.Visibility = string.IsNullOrEmpty(Title) ? Visibility.Visible : Visibility.Collapsed;
+            DescError.Visibility = string.IsNullOrEmpty(Description) ? Visibility.Visible : Visibility.Collapsed;
+            DateError.Visibility = KeepDate == null ? Visibility.Visible : Visibility.Collapsed;
+
+            ShowsError = string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(Description) || ShowsError == null;
+
+            if (ShowsError) return;
+
+            var Task = new TaskItem(Title, Description, KeepDate);
 
             Tasks.Add(Task);
             Logs?.Write($"Added task: {Title}");
 
-            if (ReminderDate.HasValue)
-                Logs?.Write($"Reminder set for '{Title}' on {ReminderDate:yyyy-MM-dd}");
+            if (KeepDate.HasValue)
 
-            // reset fields
+                Logs?.Write($"Reminder set for '{Title}' on {KeepDate:yyyy-MM-dd}");
+
             TitleBox.Clear();
             DescBox.Clear();
             DatePicker.SelectedDate = null;
         }
 
-        private void Complete_Click(object Sender, RoutedEventArgs e)
+        private void Complete_Click(object sender, RoutedEventArgs e)
         {
-      
-            var TaskItem = (TaskItem)((Button)Sender).Tag!;
+            var TaskItem = (TaskItem)((Button)sender).Tag!;
 
-          
             TaskItem.IsCompleted = true;
             TaskList.Items.Refresh();
-
-            
             Logs?.Write($"Completed task: {TaskItem.Title}");
         }
 
-        private void Delete_Click(object Sender, RoutedEventArgs e)
+        private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            var task = (TaskItem)((Button)Sender).Tag!;
-            Tasks.Remove(task);
-            Logs?.Write($"Deleted task: {task.Title}");
+            var Task = (TaskItem)((Button)sender).Tag!;
+            Tasks.Remove(Task);
+            Logs?.Write($"Deleted task: {Task.Title}");
         }
     }
 }
 /**************************************
        * Reference list  
-       * Title : Help with some of my code
+       * Title : Help me with some of my code
        * Author: ChatGPT
-       * Date 2025/06/24
+       * Date 2025/05/20
        * Code version N/A
-       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
-**************************************/ 
+       * Available at : https://chatgpt.com/c/6831c044-7f6c-8008-848a-25aa7e1f1cee
+**************************************/

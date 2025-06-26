@@ -11,8 +11,11 @@ namespace CyberSecurityChatBotGUI.Views.Controls
     public partial class NlpControl : UserControl
     {
         private ChatBotProcessor? Bots;
+
         private LogService? Logs;
+
         private MainWindow Hosts => (MainWindow)Window.GetWindow(this)!;
+
         private bool GiveName = false;
 
         public NlpControl()
@@ -30,16 +33,16 @@ namespace CyberSecurityChatBotGUI.Views.Controls
                 var player = new SoundPlayer(AudioFile);
                 player.Play();
             }
-
-            catch {}
+            catch { }
 
             AsciiBlock.Text = AsciiArt;
 
             foreach (var line in Bot.GetGreeting())
+
                 Append("Bot: " + line);
         }
 
-        private void Send_Click(object Sender, RoutedEventArgs e)
+        private void Send_Click(object sender, RoutedEventArgs e)
         {
             var TXT = ChatInput.Text.Trim();
 
@@ -60,27 +63,47 @@ namespace CyberSecurityChatBotGUI.Views.Controls
                 responses = Bots!.Process(TXT);
             }
 
-            foreach (var Line in responses)
+            bool showedError = false;
+
+            foreach (var line in responses)
             {
-                if (Line == "EXIT")
+                if (line == "EXIT")
                 {
                     Application.Current.Shutdown();
                     return;
                 }
-                else if (Line == "OPEN_TASKS")
+                else if (line == "OPEN_TASKS")
                 {
                     Hosts.SwitchToTasks();
                 }
-                else if (Line == "OPEN_QUIZ")
+                else if (line == "OPEN_QUIZ")
                 {
-                    Hosts.SwitchToQuiz();       
+                    Hosts.SwitchToQuiz();
+                }
+                else if (line.StartsWith("Sorry")) 
+                {
+                    BotError.Text = line;
+                    BotError.Visibility = Visibility.Visible;
+                    showedError = true;
                 }
                 else
                 {
-                    Append("Bot: " +Line);
+                    Append("Bot: " + line);
                 }
             }
+
+            if (!showedError)
+                BotError.Visibility = Visibility.Collapsed;
         }
+
+        /**************************************
+       * Reference list  
+       * Title : Exception-handling statements - throw, try-catch, try-finally, and try-catch-finally
+       * Author: learn microsoft
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/exception-handling-statements
+        **************************************/
 
         private void Append(string Message)
         {
@@ -95,9 +118,9 @@ namespace CyberSecurityChatBotGUI.Views.Controls
 }
 /**************************************
        * Reference list  
-       * Title : Help with some of my code
+       * Title : Help me with some of my code
        * Author: ChatGPT
-       * Date 2025/06/24
+       * Date 2025/05/20
        * Code version N/A
-       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+       * Available at : https://chatgpt.com/c/6831c044-7f6c-8008-848a-25aa7e1f1cee
 **************************************/

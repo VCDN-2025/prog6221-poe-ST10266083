@@ -23,9 +23,9 @@ namespace CyberSecurityChatBotGUI.Models
 }
 /**************************************
        * Reference list  
-       * Title : Help with my code
+       * Title : Help me with some of my code
        * Author: ChatGPT
-       * Date 2025/06/24
+       * Date 2025/05/20
        * Code version N/A
-       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+       * Available at : https://chatgpt.com/c/6831c044-7f6c-8008-848a-25aa7e1f1cee
 **************************************/

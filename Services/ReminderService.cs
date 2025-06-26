@@ -12,9 +12,9 @@ namespace CyberSecurityChatBotGUI.Services
 
         public event Action<TaskItem>? ReminderTriggered;
 
-        public ReminderService(ObservableCollection<TaskItem> tasks)
+        public ReminderService(ObservableCollection<TaskItem> Tasks)
         {
-            Task = tasks;
+            Task = Tasks;
             Timers = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
             Timers.Tick += (_, __) => CheckReminders();
             Timers.Start();
@@ -24,15 +24,17 @@ namespace CyberSecurityChatBotGUI.Services
         {
             var Now = DateTime.Now;
 
-            foreach (var t in Task)
+            foreach (var T in Task)
             {
-                if (!t.IsCompleted
-                    && t.ReminderDate.HasValue
-                    && t.ReminderDate.Value.Date == Now.Date
-                    && t.ReminderDate.Value.Hour == Now.Hour
-                    && t.ReminderDate.Value.Minute == Now.Minute)
+                if (!T.IsCompleted
+
+                    && T.ReminderDate.HasValue
+                    && T.ReminderDate.Value.Date == Now.Date
+                    && T.ReminderDate.Value.Hour == Now.Hour
+                    && T.ReminderDate.Value.Minute == Now.Minute)
+
                 {
-                    ReminderTriggered?.Invoke(t);
+                    ReminderTriggered?.Invoke(T);
                 }
             }
         }
@@ -40,9 +42,9 @@ namespace CyberSecurityChatBotGUI.Services
 }
 /**************************************
        * Reference list  
-       * Title : Help with my code
-       * Author: ChatGPT
+       * Title : Member access operators and expressions - the dot, indexer, and invocation operators.
+       * Author: microsft.learn
        * Date 2025/06/24
        * Code version N/A
-       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
+       * Available at : https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators
 **************************************/

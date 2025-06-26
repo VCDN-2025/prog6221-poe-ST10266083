@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using CyberSecurityChatBotGUI.Services;
 using CyberSecurityChatBotGUI.Models;
 
@@ -38,12 +39,12 @@ namespace CyberSecurityChatBotGUI.Views.Controls
 
             if (Indexs >= Quizes.Questions.Count)
             {
-          
                 Prompt.Text = $"Quiz complete! Score {Scores}/{Quizes.Questions.Count}";
 
                 Feedback.Text = Scores >= Quizes.Questions.Count * 0.7
                     ? "Great job!"
                     : "Keep learning to stay safe.";
+                Feedback.Foreground = Brushes.Black;
 
                 OptionsPanel.Children.Clear();
                 NextBtn.IsEnabled = false;
@@ -51,11 +52,21 @@ namespace CyberSecurityChatBotGUI.Views.Controls
                 Logs?.Write($"Quiz finished: {Scores}/{Quizes.Questions.Count}");
                 return;
             }
+            /**************************************
+             * Reference list  
+             * Title : Member access operators and expressions - the dot, indexer, and invocation operators.
+             * Author: microsft.learn
+             * Date 2025/06/24
+             * Code version N/A
+             * Available at : https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators
+            **************************************/
 
             // Show the next question
             var Q = Quizes.Questions[Indexs];
+
             Prompt.Text = $"Q{Indexs + 1}. {Q.Prompt}";
             Feedback.Text = string.Empty;
+            Feedback.Foreground = Brushes.Black;
             NextBtn.IsEnabled = false;
 
             OptionsPanel.Children.Clear();
@@ -84,10 +95,12 @@ namespace CyberSecurityChatBotGUI.Views.Controls
             var Q = Quizes.Questions[Indexs];
             bool correct = Picked == Q.Index;
 
-            // Show feedback and log
+            // Set feedback and color
             Feedback.Text = correct
                 ? "Correct! " + Q.Explanation
                 : "Wrong. " + Q.Explanation;
+
+            Feedback.Foreground = correct ? Brushes.Green : Brushes.Red;
 
             if (correct)
             {
@@ -111,9 +124,9 @@ namespace CyberSecurityChatBotGUI.Views.Controls
 }
 /**************************************
        * Reference list  
-       * Title : Help with some of my code
+       * Title : Help me with some of my code
        * Author: ChatGPT
-       * Date 2025/06/24
+       * Date 2025/05/20
        * Code version N/A
-       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
-**************************************/ 
+       * Available at : https://chatgpt.com/c/6831c044-7f6c-8008-848a-25aa7e1f1cee
+**************************************/

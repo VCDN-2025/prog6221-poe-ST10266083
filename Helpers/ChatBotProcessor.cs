@@ -15,8 +15,6 @@ namespace CyberSecurityChatBotGUI.Helpers
         private ObservableCollection<TaskItem> Tasks;
         private Dictionary<string, string> Data = new(StringComparer.OrdinalIgnoreCase);
         private string LastTopic = string.Empty;
-
-        // Reminder flow
         private string TaskTitle = null!;
         private bool Reminder = false;
 
@@ -45,6 +43,7 @@ namespace CyberSecurityChatBotGUI.Helpers
                 return Lines;
             }
 
+            // This is a list of things you can ask the chatbot
             var Name = FName.Trim();
             Data["Name"] = Name;
             Log.Write($"Stored user name: {Name}");
@@ -72,7 +71,7 @@ namespace CyberSecurityChatBotGUI.Helpers
             return Lines;
         }
 
-        // Main processor
+        // Main Process Logic
         public IEnumerable<string> Process(string Input)
         {
             Log.Write($"User: {Input}");
@@ -80,24 +79,35 @@ namespace CyberSecurityChatBotGUI.Helpers
             if (string.IsNullOrWhiteSpace(Input))
                 return new[] { "I didn't catch that. Could you please say something else?" };
 
+            // TASK 1: One-shot reminder
             var Trimmed = Input.Trim();
 
-            // TASK 1: One-shot reminder
             var OneShot = Regex.Match(Trimmed,
                 @"\bremind me to (.+?) in (\d+) days?\b",
                 RegexOptions.IgnoreCase);
+
+            /**************************************
+            * Reference list  
+            * Title : Regex.Match Method
+            * Author: learn.microsoft
+            * Date 2025/06/24
+            * Code version N/A
+            * Available at : https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.match?view=net-9.0
+            **************************************/
+
 
             if (OneShot.Success)
             {
                 var Title = OneShot.Groups[1].Value.Trim();
                 var Days = int.Parse(OneShot.Groups[2].Value);
-                var newTask = new TaskItem(Title, description: "", reminderDate: DateTime.Now.AddDays(Days));
+                var NewTask = new TaskItem(Title, description: "", reminderDate: DateTime.Now.AddDays(Days));
 
-                Tasks.Add(newTask);
+                Tasks.Add(NewTask);
                 Log.Write($"Added and scheduled task with chat: {Title} in {Days} days");
+
                 return new[]
                 {
-                    $"Got it—I'll remind you to '{Title}' in {Days} days on {newTask.ReminderDate:yyyy-MM-dd}."
+                    $"Got it—I'll remind you to '{Title}' in {Days} days on {NewTask.ReminderDate:yyyy-MM-dd}."
                 };
             }
 
@@ -106,12 +116,22 @@ namespace CyberSecurityChatBotGUI.Helpers
                 @"\b(?:i want to )?(?:add|create) (?:a )?task (.+)$",
                 RegexOptions.IgnoreCase);
 
+            /**************************************
+            * Reference list  
+            * Title : Regex.Match Method
+            * Author: learn.microsoft
+            * Date 2025/06/24
+            * Code version N/A
+            * Available at : https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.match?view=net-9.0
+            **************************************/
+
             if (Matched.Success)
             {
                 TaskTitle = Matched.Groups[1].Value.Trim();
                 Tasks.Add(new TaskItem(TaskTitle, description: ""));
                 Log.Write($"Added task with chat: {TaskTitle}");
                 Reminder = true;
+
                 return new[]
                 {
                     $"Task '{TaskTitle}' added. Would you like to set a reminder? (e.g. \"Yes, in 3 days\" or \"No\")"
@@ -131,16 +151,27 @@ namespace CyberSecurityChatBotGUI.Helpers
                     return new[] { $"Okay, no reminder set for '{TaskTitle}'." };
                 }
 
+                /**************************************
+                 * Reference list  
+                 * Title : Compound Boolean Expressions
+                 * Author: loyola unversity chicago
+                 * Date 2025/06/24
+                 * Code version N/A
+                 * Available at : https://introcs.cs.luc.edu/decisions/compoundconditions.html
+            **************************************/
+
+
                 var Remebers = Regex.Match(Trimmed, @"in (\d+) days?", RegexOptions.IgnoreCase);
 
                 if (Remebers.Success && int.TryParse(Remebers.Groups[1].Value, out var days))
                 {
-                    var t = Tasks.Last(ti => ti.Title == TaskTitle);
-                    t.ReminderDate = DateTime.Now.AddDays(days);
+                    var TR = Tasks.Last(ti => ti.Title == TaskTitle);
+                    TR.ReminderDate = DateTime.Now.AddDays(days);
                     Log.Write($"Reminder set for '{TaskTitle}' in {days} days");
+
                     return new[]
                     {
-                        $"Got it, I'll remind you about '{TaskTitle}' on {t.ReminderDate:yyyy-MM-dd}."
+                        $"Got it, I'll remind you about '{TaskTitle}' on {TR.ReminderDate:yyyy-MM-dd}."
                     };
                 }
 
@@ -166,7 +197,7 @@ namespace CyberSecurityChatBotGUI.Helpers
                 Trimmed.Equals("quit", StringComparison.OrdinalIgnoreCase))
                 return new[] { "EXIT" };
 
-            // Part 1 & 2: chit-chat / tips / sentiment / preferences
+            // Part 1 and 2 code
 
             if (Trimmed.Contains("how are you", StringComparison.OrdinalIgnoreCase))
             {
@@ -181,7 +212,7 @@ namespace CyberSecurityChatBotGUI.Helpers
             if (Trimmed.Contains("what can i ask", StringComparison.OrdinalIgnoreCase))
             {
                 Log.Write("Explained available questions");
-                return new[] { "You can ask about passwords, scams, privacy, phishing, tasks or start the quiz." };
+                return new[] { "You can ask about passwords, scams, privacy, phishing, start the tasks or start the quiz." };
             }
 
             // Activity log
@@ -201,6 +232,7 @@ namespace CyberSecurityChatBotGUI.Helpers
                 Log.Write($"Stored preference: {Topics}");
                 var Tips = Context.GetTips(Topics);
                 bool Known = Tips.Any();
+
                 return new[]
                 {
                     Known
@@ -212,15 +244,16 @@ namespace CyberSecurityChatBotGUI.Helpers
             // Recall preference
             if (Trimmed.Contains("what is my preference", StringComparison.OrdinalIgnoreCase))
             {
-                if (Data.TryGetValue("preference", out var pref) && Context.GetTips(pref).Any())
+                if (Data.TryGetValue("preference", out var Pref) && Context.GetTips(Pref).Any())
                 {
-                    var tip = Context.PickRandomTip(pref);
-                    Log.Write($"Tip for preference {pref}: {tip}");
+                    var Tip = Context.PickRandomTip(Pref);
+                    Log.Write($"Tip for preference {Pref}: {Tip}");
+
                     return new[]
                     {
-                        $"Since you're interested in {pref}, here's a tip:",
+                        $"Since you're interested in {Pref}, here's a tip:",
                         new string('═', 60),
-                        tip,
+                        Tip,
                         new string('═', 60)
                     };
                 }
@@ -231,10 +264,12 @@ namespace CyberSecurityChatBotGUI.Helpers
             if ((Trimmed.Contains("worried", StringComparison.OrdinalIgnoreCase) ||
                  Trimmed.Contains("anxious", StringComparison.OrdinalIgnoreCase) ||
                  Trimmed.Contains("frustrated", StringComparison.OrdinalIgnoreCase)) &&
-                Context.ContainsTopic(Trimmed, out var emoTopic))
+                Context.ContainsTopic(Trimmed, out var Topic))
             {
                 Log.Write("Empathy intro");
-                var SecondTip = Context.PickRandomTip(emoTopic);
+
+                var SecondTip = Context.PickRandomTip(Topic);
+
                 return new[]
                 {
                     "I understand—it can be stressful. Here’s what I recommend:",
@@ -249,7 +284,9 @@ namespace CyberSecurityChatBotGUI.Helpers
             {
                 LastTopic = Key;
                 var Tips = Context.PickRandomTip(Key);
+
                 Log.Write($"Tip on {Key}: {Tips}");
+
                 return new[]
                 {
                     new string('═', 60),
@@ -263,7 +300,9 @@ namespace CyberSecurityChatBotGUI.Helpers
                 !string.IsNullOrEmpty(LastTopic))
             {
                 var ExtraTip = Context.PickRandomTip(LastTopic);
+
                 Log.Write($"Extra tip on {LastTopic}: {ExtraTip}");
+
                 return new[]
                 {
                     $"Sure—here’s more on {LastTopic}:",
@@ -275,6 +314,7 @@ namespace CyberSecurityChatBotGUI.Helpers
 
             // Fallback
             Log.Write($"Unknown input: {Input}");
+
             return new[]
             {
                 "Sorry, I didn't get that. Try asking about password, scam, privacy, phishing, tasks or quiz."
@@ -286,20 +326,15 @@ namespace CyberSecurityChatBotGUI.Helpers
             var List = new List<string> { Heading };
             var Entries = Log.Entries;
             int Start = Math.Max(0, Entries.Count - Counts);
+
             for (int i = Start; i < Entries.Count; i++)
                 List.Add($"{i - Start + 1}. {Entries[i]}");
+
             return List;
         }
     }
 }
-/**************************************
-       * Reference list  
-       * Title : Dictionary with list of strings as value
-       * Author: stackoverflow
-       * Date 2025/05/20
-       * Code version N/A
-       * Available at : https://stackoverflow.com/questions/17887407/dictionary-with-list-of-strings-as-value
-**************************************/
+
 
 /**************************************
        * Reference list  

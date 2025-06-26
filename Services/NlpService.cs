@@ -42,6 +42,16 @@ namespace CyberSecurityChatBotGUI.Services
             };
         }
 
+        /**************************************
+       * Reference list  
+       * Title : Dictionary with list of strings as value
+       * Author: stackoverflow
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://stackoverflow.com/questions/17887407/dictionary-with-list-of-strings-as-value
+        **************************************/
+
+
         public IEnumerable<string> GetTips(string Topic)
             => Responses.TryGetValue(Topic, out var t) ? t : Array.Empty<string>();
 
@@ -57,24 +67,18 @@ namespace CyberSecurityChatBotGUI.Services
         public bool ContainsTopic(string Text, out string Found)
         {
             foreach (var key in Responses.Keys)
+
                 if (Text.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     Found = key;
                     return true;
                 }
+
             Found = null!;
             return false;
         }
     }
 }
-/**************************************
-       * Reference list  
-       * Title : Dictionary with list of strings as value
-       * Author: stackoverflow
-       * Date 2025/05/20
-       * Code version N/A
-       * Available at : https://stackoverflow.com/questions/17887407/dictionary-with-list-of-strings-as-value
-**************************************/
 /**************************************
        * Reference list  
        * Title : Help with some of my code

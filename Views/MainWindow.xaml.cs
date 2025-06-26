@@ -50,11 +50,3 @@ namespace CyberSecurityChatBotGUI.Views
         }
     }
 }
-/**************************************
-       * Reference list  
-       * Title : Help with some of my code
-       * Author: ChatGPT
-       * Date 2025/06/24
-       * Code version N/A
-       * Available at : https://chatgpt.com/c/685c5f68-679c-8008-ba45-c7d2533a1106
-**************************************/ 
