@@ -1,3 +1,22 @@
+//Additional references for all my XML.views classes code:
+
+ /**************************************
+* Reference list  
+* Title : XML Tutorial
+* Author: W3School
+* Date 2025/05/25
+* Code version N/A
+* Available at : https://www.w3schools.com/xml/
+ **************************************/
+ /**************************************
+       * Reference list  
+       * Title : Help me with some of my code
+       * Author: ChatGPT
+       * Date 2025/05/20
+       * Code version N/A
+       * Available at : https://chatgpt.com/c/6831c044-7f6c-8008-848a-25aa7e1f1cee
+**************************************/
+
 Cybersecurity Awareness Chatbot ST10266083
 
 A WPF desktop chatbot that raises cybersecurity awareness through smart chat, task reminders and a quick quiz, which is all tracked in an activity log page.
